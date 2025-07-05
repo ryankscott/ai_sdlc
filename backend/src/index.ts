@@ -5,9 +5,14 @@ import { initDB } from "./database";
 import {
   createPrd,
   deletePrd,
+  generatePrdContent,
+  critiquePrdContent,
   getPrdById,
   getPrds,
   updatePrd,
+  getSession,
+  saveSession,
+  testProvider,
 } from "./handlers";
 
 const app = express();
@@ -34,6 +39,15 @@ initDB("prds.db")
     app.get("/prds/:id", getPrdById(db));
     app.put("/prds/:id", updatePrd(db));
     app.delete("/prds/:id", deletePrd(db));
+    app.post("/prds/:id/generate", generatePrdContent(db));
+    app.post("/prds/:id/critique", critiquePrdContent(db));
+
+    // Interactive session endpoints
+    app.get("/prds/:prdId/session", getSession(db));
+    app.post("/prds/:prdId/session", saveSession(db));
+
+    // Provider testing endpoint
+    app.post("/test-provider", testProvider);
 
     app.listen(port, () => {
       console.log(`Server is running on http://localhost:${port}`);
